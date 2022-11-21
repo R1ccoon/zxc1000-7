@@ -8,26 +8,13 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 
-class Widget(QWidget):
+class Widget(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.lodaui('ui.ui', self)
-
-    def mouseMoveEvent(self, event):
-        self.point = event.x(), event.y()
-
-    def mousePressEvent(self, event):
-        self.point = event.x(), event.y()
-        if event.button() == Qt.LeftButton:
-            self.kn = 1
-        if event.button() == Qt.RightButton:
-            self.kn = 0
-        self.update()
-
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Space:
-            self.kn = 2
-        self.update()
+        uic.loadUi('ui.ui', self)
+        self.pushButton.clicked.connect(self.bb)
+        self.point = 100,100
+        self.kn = -1
 
     def paintEvent(self, event):
 
@@ -57,7 +44,7 @@ class Widget(QWidget):
             r = a = s
             x, y = self.point
             self.drawing.setBrush(QColor(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
-            coordss = [(x, y + r ), (x + a, y - r), (x - a, y - r)]
+            coordss = [(x, y + r), (x + a, y - r), (x - a, y - r)]
             path = QPainterPath()
             path.moveTo(*coordss[0])
             path.lineTo(*coordss[1])
@@ -65,6 +52,9 @@ class Widget(QWidget):
             self.drawing.drawPath(path)
             self.drawing.end()
 
+    def bb(self):
+        self.kn = 1
+        self.update()
 
 if __name__ == '__main__':
     app = QApplication([])
